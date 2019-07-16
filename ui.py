@@ -168,19 +168,51 @@ def add_article_from_newspaper(link):
         #except Exception as e:
             #print(e)
             #get article title
-        
-        name = newNewsItem.title #get the title for the article
-        print('NameTest {0}'.format(name))
+        try:
+            name = newNewsItem.title #get the title for the article
+            print('NameTest {0}'.format(name))
+        except Exception as e:
+            print(e)
+            name = btc.read_text('Please enter title: ')
             #get article author
-        author = ' '.join(newNewsItem.authors)
+        try:
+            author = ' '.join(newNewsItem.authors)
             #get article publication
-        publication = newNewsItem.meta_data['og']['site_name']
-        year = newNewsItem.publish_date.year
-        month = newNewsItem.publish_date.month
-        day = newNewsItem.publish_date.day
-            
-        summary = newNewsItem.summary
-        keywords = ', '.join(newNewsItem.keywords)
+        except Exception as e:
+            print(e)
+            author = btc.read_text('Please enter author: ')
+        try:    
+            publication = newNewsItem.meta_data['og']['site_name']
+        except Exception as e:
+            print(e)
+            publication = btc.read_text('Please enter publication: ')
+        try:
+            year = newNewsItem.publish_date.year
+        except Exception as e:
+            print(e)
+            year = btc.read_int_ranged('Please enter year: ', 1, 2200)
+        try:
+            month = newNewsItem.publish_date.month
+        except Exception as e:
+            print(e)
+            month = btc.read_int_ranged('Please enter month: ', 1, 12)
+        try:
+            day = newNewsItem.publish_date.day
+        except Exception as e:
+            print(e)
+            day = btc.read_int_ranged('Please enter day: ', 1, 31)
+        try:
+            summary = newNewsItem.summary
+        except Exception as e:
+            print(e)
+            print('Summary download failed')
+            summary = 'Summary not found'
+        try:
+            keywords = ', '.join(newNewsItem.keywords)
+        except Exception as e:
+            print(e)
+            print('Keyword download failed')
+            keywords= 'keywords not found'
         print(name)
         print(author)
         print(publication)
