@@ -181,7 +181,8 @@ def add_article_from_newspaper(link):
         except Exception as e:
             print(e)
             author = btc.read_text('Please enter author: ')
-        try:    
+        try:
+            #works for most websites, but not Sudan Tribune
             publication = newNewsItem.meta_data['og']['site_name']
         except Exception as e:
             print(e)
@@ -213,12 +214,13 @@ def add_article_from_newspaper(link):
             print(e)
             print('Keyword download failed')
             keywords= 'keywords not found'
-        print(name)
-        print(author)
-        print(publication)
-        print('{0}/{1}/{2}'.format(month, day, year))
-        print(summary)
-        print(keywords)
+        print('TITLE - {0} - AUTHOR {1}'.format(name, author))
+        print('DATE - {0}/{1}/{2} - PUBLICATION {3}'.format(month, day, year, publication))
+        #print(author)
+        #print(publication)
+        #print('{0}/{1}/{2}'.format(month, day, year))
+        #print(summary)
+        print('KEYWORDS: ', keywords)
         display_categories()
         category_id = btc.read_text("Category ID: ")
         category = db.get_category(category_id)
@@ -227,9 +229,9 @@ def add_article_from_newspaper(link):
             return
         description_choice = btc.read_text('View article description? y/n: ')
         if description_choice == 'y':
-            print(name)
-            print(summary)
-            print(keywords)
+            print('Title: {0}'.format(name))
+            print('Summary: {0}'.format(summary))
+            print('Keywords: {0}'.format(keywords))
         description = btc.read_text("Description or '.' to cancel: ")
         if description == ".":
             return
@@ -625,15 +627,17 @@ def strip_article_title(article_id):
             
 
 def delete_article(article_id):
-    #article_id = int(input("article ID: "))
-    article = db.get_article(article_id)
-    choice = input("Are you sure you want to delete '" + 
-                   article.name + "'? (y/n): ")
-    if choice == "y":
-        db.delete_article(article_id)
-        print("'" + article.name + "' was deleted from database.\n")
-    else:
-        print("'" + article.name + "' was NOT deleted from database.\n")
+    try:
+        article = db.get_article(article_id)
+        choice = input("Are you sure you want to delete '" + 
+                       article.name + "'? (y/n): ")
+        if choice == "y":
+            db.delete_article(article_id)
+            print("'" + article.name + "' was deleted from database.\n")
+        else:
+            print("'" + article.name + "' was NOT deleted from database.\n")
+    except AttributeError as e:
+        print(e, 'Article id not found')
 
 def add_category():
     category_name = btc.read_text('Enter the category name or . to cancel: ')
