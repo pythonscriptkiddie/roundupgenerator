@@ -290,7 +290,7 @@ def add_article():
             #article_text = article_text.split()
             #article_text = [i for i in article_text if de.isEnglish(i) == True]
             #article_text = ' '.join(article_text)
-            print(article_summary)
+            #print(article_summary)
         description = btc.read_text("Description or '.' to cancel: ")
         if description == ".":
             return
@@ -300,8 +300,7 @@ def add_article():
                       author=author, publication=publication)
         db.add_article(article)    
         print(name + " was added to database.\n")
-
-
+    
 
 def update_article_name(article_id):
     article = db.get_article(article_id)
