@@ -93,9 +93,26 @@ def display_articles_by_category_name(category_snippet):
         search_category_id = search_category.id
         articles = db.get_articles_by_category_id(search_category_id)
         display_articles(articles, search_category.name.upper())
-  
-def date_search():
-    search_choice = btc.read_int_ranged('Options:\n1 - day\n2 - month\n3 - year\n4 - cancel\nEnter your choice: ', 1, 4)
+ 
+def date_search_interface(command):
+    date_commands = {'day': 1,
+                       'month': 2,
+                       'year': 3
+                       }
+    
+    if not command:
+        print('search_date must be followed by one of these arguments')
+        print('year, month, day')
+        print('eg. search_date day searches by day, menu will prompt for date')
+    else:
+        try:
+            date_search(date_commands[command])
+            #command=date_commands[command]()
+        except KeyError:
+            print('Invalid suffix for category menu')
+    
+def date_search(search_choice):
+    #search_choice = btc.read_int_ranged('Options:\n1 - day\n2 - month\n3 - year\n4 - cancel\nEnter your choice: ', 1, 4)
     if search_choice in range(1, 4): #user searches by year
         year = btc.read_int('Year: ')
         if search_choice in range(1, 3):
@@ -757,12 +774,16 @@ def add_article_interface(command):
 
 
 def search_article_interface(command):
+    '''
+    Note: search_article_interface is being deprecated. Each of the functions
+    under search_commands will be given its own command. Date search has been
+    removed and has a new command named 'search_date'.
+    '''
     search_commands = {'id': display_article_by_id,
                        'name': display_articles_by_name,
                        'author' : display_articles_by_author,
                        'category': get_articles_by_category,
                        'publication': display_articles_by_publication,
-                       'date': date_search,
                        }
     
     if not command:
@@ -862,6 +883,16 @@ search name - search by article title
 search author - search by author
 search category - search by category
 search date - search by date''')
+            
+    def do_search_date(self, command):
+        date_search_interface(command=command)
+        
+    def help_search_date(command):
+        print('Enter search_date [command]')
+        print('Options:')
+        print('search_date year (search by year)')
+        print('search_date month (search by month)')
+        print('search_date day (search by day)')
         
     def do_add(self, command):
         add_article_interface(command)
