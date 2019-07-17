@@ -901,6 +901,13 @@ add import - imports articles from a csv file''')
         print('udartdesc [article_id] updates the description of an article')
         print('example: udartcat 13 \t updates the description for article id 13')
         
+    def do_udartauth(self, command):
+        update_article_author(article_id=command)
+        
+    def help_udartauth(self):
+        print('udartauth [article_id] updates an article\'s author')
+        print('Note: this does not affect other articles from the same author')
+        
     def do_udartpub(self, command):
         update_article_publication(article_id=command)
         
