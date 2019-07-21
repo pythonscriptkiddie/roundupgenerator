@@ -15,7 +15,7 @@ import glob
 import cmd
 import sys
 import news.news_article as na
-import warnings
+#import warnings
 
 
 '''perhaps create a menu that appears when you choose the edit article option
