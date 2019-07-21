@@ -12,6 +12,7 @@ from sqlalchemy.sql import select, insert, delete, update, func
 
 from objects.objects import Article
 from objects.objects import Category
+import objects.BTCInput as BTCInput
 
 connection = False
 
@@ -287,6 +288,7 @@ def get_monthly_article_count(category_id, month, year):
               articles_table.c.month == month and articles_table.c.year == year)
     rp = connection.execute(s)
     record = rp.first()
+    print(record.count_1)
     return record.count_1
 
 def get_undescribed_article_count(month, year):

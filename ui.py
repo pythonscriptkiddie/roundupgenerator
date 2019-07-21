@@ -15,6 +15,7 @@ import glob
 import cmd
 import sys
 import news.news_article as na
+import warnings
 
 
 '''perhaps create a menu that appears when you choose the edit article option
@@ -263,60 +264,27 @@ def add_article_from_newspaper(link):
     #new_article = Article(link=)
     #print('Article download failed. Return to main menu.')
 
-def add_article():
-    #ask for link of article first:
-    link = btc.read_text('Link or "." to cancel: ')
-    if link == '.':
+def manual_add(link=None):
+    if (link == None) or (not link):
+        print('Link', link)
+        print('No link supplied, manual_add must be followed by link.')
         return
-    try:
-        proposed_title = Article.get_title(link)
-        print('Proposed title: {0}'.format(proposed_title))
-    except:
-        print('Unable to scrape title')
-        proposed_title = 'Scraping error'
-    title_choice = btc.read_float_ranged(prompt='Press 1 to accept title, 2 to enter different title: ',
-                                         min_value=1, max_value=2)
-    if title_choice == 1:
-        name = proposed_title
     else:
-        name = btc.read_text('Enter name or "." to cancel: ')
-        if name == '.':
+        print('Manual article creation/n')
+        print('Link: {0}'.format(link))
+        display_categories()
+        #print(link)
+    #if link == None:
+    #    print('No link supplied, manual_add must be followed by link.')
+        new_article_category = btc.read_int('Enter category for article: ')
+        category = db.get_category(new_article_category)
+        assert category != None
+        new_article = Article.from_input(link=link, category=category)
+        if new_article == None:
+            print('Article creation cancelled. Returning to main menu.')
             return
-    author = btc.read_text('Enter author or "." to cancel: ')
-    publication = btc.read_text('Enter publication or "." to cancel: ')
-    
-    #name        = input("Name: ")
-    year      = btc.read_int_ranged('Year: ', min_value = -1, max_value = 2030)
-    month     = btc.read_int_ranged('Month: ', min_value = -1, max_value = 12)
-    day       = btc.read_int_ranged('Day: ', min_value = -1, max_value = 31)
-    print()
-    display_categories()
-    category_id = btc.read_text("Category ID: ")
-    category = db.get_category(category_id)
-    if category == None:
-        print('There is no category with that ID. article NOT added.\n')
-    #ategory_id = int(input("Category ID: "))
-    #link = input("Link: ")
-    else:
-        description_choice = btc.read_text('View article description? y/n: ')
-        if description_choice == 'y':
-            article_summary = na.get_article_summary(link)
-            print(article_summary)
-            #article_text = Article.get_text(link)
-            #article_text = dm.get_cleaned_text(link)
-            #article_text = article_text.split()
-            #article_text = [i for i in article_text if de.isEnglish(i) == True]
-            #article_text = ' '.join(article_text)
-            #print(article_summary)
-        description = btc.read_text("Description or '.' to cancel: ")
-        if description == ".":
-            return
-        else:
-            article = Article(name=name, year=year, month=month,day=day,
-                      category=category, link=link, description=description,
-                      author=author, publication=publication)
-        db.add_article(article)    
-        print(name + " was added to database.\n")
+        db.add_article(new_article)
+        print(new_article.title + " was added to database.\n")
     
 
 def update_article_name(article_id):
@@ -757,22 +725,6 @@ def export_roundup_by_category():
         print('Roundup export cancelled. Return to main menu.\n')
         #display_title()
 
-    
-            
-def add_article_interface(command):
-    add_commands = {'new': add_article,
-                    'import': get_csv_in_directory}
-                      
-    if not command:
-        print('Enter command')
-    else:
-        try:
-            command=add_commands[command]()
-        except KeyError:
-            print('Invalid suffix for add')
-
-
-
 def search_article_interface(command):
     '''
     Note: search_article_interface is being deprecated. Each of the functions
@@ -844,7 +796,8 @@ def export_interface(command):
             print('Please enter a valid parameter for "export"')
 
 
-def get_stats():
+def get_stats(command):
+    del command
     stats_choice = btc.read_int_ranged('1 - monthly stats; 2 - yearly stats; 3 - main menu: ',
                                        1, 3)
     if stats_choice in range(1, 3):
@@ -861,10 +814,13 @@ def get_stats():
     
 def split_command(command):
     if type(command) != int:
-        split_command = command.split(' ')
-        return split_command[0], split_command[1]
-    else:
-        print('Invalid command: please enter with format finalize [m] [y]')
+        try:
+            split_command = command.split(' ')
+            return split_command[0], split_command[1]
+        except Exception as e:
+            print(e)
+        
+            
 
 class RGenCMD(cmd.Cmd):
         
@@ -881,8 +837,7 @@ class RGenCMD(cmd.Cmd):
 search id - search by article id
 search name - search by article title
 search author - search by author
-search category - search by category
-search date - search by date''')
+search category - search by category''')
             
     def do_search_date(self, command):
         date_search_interface(command=command)
@@ -894,20 +849,39 @@ search date - search by date''')
         print('search_date month (search by month)')
         print('search_date day (search by day)')
         
+#    def do_add(self, command):
+#        add_article_interface(command)
+        
+    def do_import_from_csv(self, command):
+        del command
+        get_csv_in_directory()
+    
+    def help_import_from_csv(self):
+        print('''Import articles from a CSV file. import_from_csv is entered
+without any suffix''')
+    
     def do_add(self, command):
-        add_article_interface(command)
+        add_article_from_newspaper(link=command)
+    
+#    def help_getfromnews(self, command):
+#       print('getfromnews [article_url] creates an article from the newspaper module')
+#        print('user will be prompted to supply category and description')
         
     def help_add(self):
         print('''Enter add [option] to add articles:
 add new - takes input and creates a new article
 add import - imports articles from a csv file''')
-            
-    def do_getfromnews(self, command):
-        add_article_from_newspaper(link=command)
-    
-    def help_getfromnews(self, command):
-        print('getfromnews [article_url] creates an article from the newspaper module')
-        print('user will be prompted to supply category and description')
+        
+    def do_manual_add(self, command):
+        manual_add(link=command)
+        
+    def help_manual_add(self):
+        print('''Enter manual_add [link] to add an article manually.
+The user will be prompted to enter the article's category. If the category
+exists, then the prompts will gather the data for the other attributes.
+Invalid categories will cancel article creation. Keyboard interrupts (CTRL+C)
+will return to the main menu.
+''')
         
     def do_udname(self, command):
         update_article_name(article_id = command)
@@ -993,10 +967,24 @@ add import - imports articles from a csv file''')
         print('categories add - add category')
         print('categories update - update category name')
         print('categories display - display categories')
+        print('categories delete - delete category')
+        print('')
+        
+    def do_stats(self, command):
+        print('Warning, stats function not performing correctly, update scheduled.')
+        get_stats(command)
+    
+    def help_stats(self):
+        print('Enter "stats" without any arguments to bring up the stats options')
     
     def do_finalize(self, command):
         command = split_command(command)
-        finalize_article_descriptions(month=command[0], year=command[1])
+        try:
+            finalize_article_descriptions(month=command[0], year=command[1])
+        except TypeError:
+            print('Finalize command entered incorrectly')
+            print('Enter finalize [m] [y] to finalize descriptions')
+            
     
     def help_finalize(self):
         print('finalize [month], [year]')
