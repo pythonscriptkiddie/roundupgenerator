@@ -624,9 +624,8 @@ def delete_article(article_id):
         print(e, 'Article id not found')
 
 def add_category():
-    category_name = btc.read_text('Enter the category name or . to cancel: ')
-    if category_name != '.':
-        new_category = Category(name=category_name)
+    new_category = Category.from_input()
+    if new_category.name != '.':
         db.add_category(new_category)
 
         

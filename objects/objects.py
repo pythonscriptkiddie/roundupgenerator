@@ -295,6 +295,21 @@ class Article:
         return  pd.DataFrame.from_dict(self.orderedDictFormat, orient='index')
 
 class Category:
+    
+    @classmethod
+    def from_input(cls):
+        try:
+            print('Manual category creation')
+            print('Press "." to cancel')
+            name = read_text('Category name: ')
+            #description = read_text('Description: ')
+            return cls(name=name)
+        except Exception as e:
+            print(e)
+            return
+        except KeyboardInterrupt:
+            print('Ctrl+C pressed, add article cancelled')
+    
     def __init__(self, id=0, name=None, articles=[]):
         self.id = id
         self.name = name
