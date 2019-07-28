@@ -569,6 +569,7 @@ def create_csv_list(filename):
     print('csv list created')
     return csvRows
 
+
     
 def csv_item_to_article(csv_list_item):
     new_article_link = csv_list_item[0]
