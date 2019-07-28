@@ -283,9 +283,17 @@ def get_yearly_article_count(category_id, year):
     return record.count_1
 
 
-def get_monthly_article_count(category_id, month, year):
+def get_monthly_article_count_old(category_id, month, year):
     s = select([func.count(articles_table)]).where(articles_table.c.categoryID == category_id and
               articles_table.c.month == month and articles_table.c.year == year)
+    rp = connection.execute(s)
+    record = rp.first()
+    print(record.count_1)
+    return record.count_1
+
+def get_monthly_article_count(category_id, month, year):
+    s = select([func.count(articles_table)]).where(and_(articles_table.c.categoryID == category_id,
+              articles_table.c.month == month, articles_table.c.year == year))
     rp = connection.execute(s)
     record = rp.first()
     print(record.count_1)
