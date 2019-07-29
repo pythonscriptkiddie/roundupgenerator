@@ -18,6 +18,17 @@ def get_article_from_url(url):
     #print(new_article)
     return new_article
 
+def get_title(new_article):
+    return new_article.title
+
+def get_article_title(url):
+    try:
+        new_article = get_article_from_url(url)
+        return get_title(new_article)
+    except Exception as e:
+        title = 'Not found due to {0}'.format(e)
+        return title
+
 def get_summary(new_article):
     return new_article.summary
 

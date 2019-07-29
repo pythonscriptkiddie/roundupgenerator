@@ -296,7 +296,7 @@ def get_monthly_article_count(category_id, month, year):
               articles_table.c.month == month, articles_table.c.year == year))
     rp = connection.execute(s)
     record = rp.first()
-    print(record.count_1)
+    #print(record.count_1)
     return record.count_1
 
 def get_undescribed_article_count(month, year):

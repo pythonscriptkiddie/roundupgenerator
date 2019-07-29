@@ -419,7 +419,8 @@ def scrape_article_name(article_id):
                                              min_value = 1, max_value = 2)
         if article_choice == 1:
             try:
-                new_title = Article.get_title(article.link)
+                new_title = na.get_article_title(article.link)
+                #new_title = Article.get_title(article.link)
                 print('''
 New title: {0}
 Old title: {1}'''.format(new_title, article.name))
@@ -439,7 +440,7 @@ def finalize_article_descriptions(month, year=2019):
     undescribed_articles = len(undescribed)
     print('{0} undescribed articles'.format(undescribed_articles))
     for article in undescribed:
-        print('{0} undescribed articles2'.format(undescribed_articles))
+        print('{0} undescribed articles'.format(undescribed_articles))
         update_article_description(article.id)
         description_choice = btc.read_int_ranged('{0} descriptions remaining. Press 1 to continue, 2 to cancel: '.format(undescribed_articles), 1, 2)
         if description_choice == 2:
