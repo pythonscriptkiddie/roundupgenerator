@@ -207,8 +207,7 @@ def get_articles_for_roundup(roundup_month, roundup_year, category_id):
 
 def finalize_descriptions(month, year):
     s = select([articles_table]).where(and_(articles_table.c.month == month,
-              articles_table.c.year == year,
-              articles_table.c.description == 'Not specified'))
+              articles_table.c.year == year, articles_table.c.description=='Not specified'))
     rp = connection.execute(s)
     articles_for_finalizing = [make_article(i) for i in rp]
     return articles_for_finalizing
@@ -276,6 +275,7 @@ def get_article_count(category_id):
     return record.count_1
 
 def get_yearly_article_count(category_id, year):
+    #fix this
     s = select([func.count(articles_table)]).where(articles_table.c.categoryID == category_id and
               articles_table.c.year == year)
     rp = connection.execute(s)

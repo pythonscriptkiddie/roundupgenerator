@@ -568,19 +568,35 @@ def create_csv_list(filename):
     csvFileObj.close()
     print('csv list created')
     return csvRows
-
-
     
 def csv_item_to_article(csv_list_item):
-    new_article_link = csv_list_item[0]
+    new_article_news_item = na.get_article_from_url(csv_list_item[0])
+    new_article_link = new_article_news_item.url
+    new_article_title = new_article_news_item.title
+    new_article_summary = new_article_news_item.summary
+    #inclue this in the unfinished articles
+    new_article_description = "SUMMARY - " + new_article_summary
     new_article_category = get_category_id(csv_list_item[1])
     new_article_day = csv_list_item[2]
     new_article_month = csv_list_item[3]
     new_article_year = csv_list_item[4]
-    article_from_csv = Article(name='Untitled Article', year=new_article_year, month=new_article_month,day=new_article_day,
-                      category=new_article_category, link=new_article_link, description='Not specified',
-                      author='Not specified', publication='Not specified')
+    article_from_csv = Article(name=new_article_title,link=new_article_link, category=new_article_category, year=new_article_year, month=new_article_month,
+                               day=new_article_day, description=new_article_description, author='Not specified', publication='Not specified')
     return article_from_csv
+    
+    
+#    print(new_article_news_item.__dict__.keys())
+#    #new_article = csv_list_item[0]
+#    new_article_link = new_article[0]
+#    new_article_category = get_category_id(new_article[1])
+#    new_article_day = new_article[2]
+#    new_article_month = new_article[3]
+#    new_article_year = new_article[4]
+#    #new_article_news_item = na.get_article_from_url(new_article_link)
+#    article_from_csv = Article(name='Untitled Article', year=new_article_year, month=new_article_month,day=new_article_day,
+#                      category=new_article_category, link=new_article_link, description='Not specified',
+#                      author='Not specified', publication='Not specified')
+#    print(article_from_csv)
 
 def strip_article_title(article_id):
     #article_id = btc.read_int("article ID: ")
