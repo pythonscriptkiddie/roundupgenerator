@@ -447,6 +447,19 @@ def finalize_article_descriptions(month, year=2019):
             print('Update descriptions cancelled')
             break
         
+#add function to finalize articles for one month
+def finalize_desc_month(month, year):
+    articles_to_finalize = db.get_articles_by_month(month=month, year=year)
+    articles_remaining = len(articles_to_finalize)
+    for article in articles_remaining:
+        print('{0} undescribed articles'.format(articles_remaining))
+        update_article_description(article.id)
+        description_choice = btc.read_int_ranged('{0} descriptions remaining. Press 1 to continue, 2 to cancel: ')
+        if description_choice == 2:
+            print('Update descriptions cancelled')
+            break
+        
+        
 def finalize_title_stripping(month, year):
     articles = db.get_articles_by_month(month=month, year=year)
     articles_remaining = len(articles)
@@ -1006,6 +1019,17 @@ will return to the main menu.
     def help_finalize(self):
         print('finalize [month], [year]')
         print('finalize 6 2019 : finalizes the June 2019 articles')
+        
+    def do_review_desc(self, command):
+        #fix the error with this function
+        command = split_command(command)
+        print(command[0], type(command[0]))
+        print(command[1], type(command[1]))
+        try:
+            finalize_desc_month(month=int(command[0]), year=int(command[1]))
+        except TypeError:
+            print('review_desc command entered incorrectly')
+            print('Enter review_desc [m] [y] to finalize descriptions')
         
     def do_export(self, command):
         export_interface(command)
