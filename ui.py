@@ -297,9 +297,28 @@ def update_article_name(article_id):
         article_choice = btc.read_int_ranged('1 to edit article title, 2 to leave as is: ' ,
                                              min_value = 1, max_value = 2)
         if article_choice == 1:
-            new_title = btc.read_text('Enter new title or . to cancel: ')
-            if new_title != '.':
-                db.update_article_name(article_id, new_title)
+            try:
+                newsItem1 = na.get_article_from_url(article.link)
+                updated_title = newsItem1.title
+            except Exception as e:
+                print('Scrape failed because of {0}'.format(e))
+                updated_title = 'Invalid'
+            print('Rescraped title: {0}'.format(updated_title))
+            title_choice = btc.read_int_ranged('1 - existing title, 2 - scraped title, 3 - manual input', 1, 3)
+                                
+            if title_choice == 1:
+                print('Title update cancelled, article title unchanged.')
+                return
+            elif title_choice == 2:
+                db.update_article_name(article_id, updated_title)
+                print('Title update complete. Return to main menu.')
+            elif title_choice == 3:
+                new_title = btc.read_text('Enter new title or . to cancel: ')
+                if new_title != '.':
+                    db.update_article_name(article_id, new_title)
+                else:
+                    print('Edit cancelled, return to main menu')
+                    return
         else:
             print('Edit cancelled, article title unchanged')
             
@@ -419,7 +438,9 @@ def scrape_article_name(article_id):
                                              min_value = 1, max_value = 2)
         if article_choice == 1:
             try:
-                new_title = na.get_article_title(article.link)
+                new_article_news_item = na.get_article_from_url(article.link)
+                new_title = new_article_news_item.title
+                #new_title = na.get_article_title(article.link)
                 #new_title = Article.get_title(article.link)
                 print('''
 New title: {0}
@@ -432,6 +453,7 @@ Old title: {1}'''.format(new_title, article.name))
                 db.update_article_name(article_id, new_title)
             elif title_choice == 2:
                 print('article update cancelled')
+                
         elif article_choice == 2:
             print('article update cancelled')
     
@@ -448,19 +470,26 @@ def finalize_article_descriptions(month, year=2019):
             break
         
 #add function to finalize articles for one month
-def finalize_desc_month(month, year):
-    articles_to_finalize = db.get_articles_by_month(month=month, year=year)
-    articles_remaining = len(articles_to_finalize)
-    for article in articles_remaining:
-        print('{0} undescribed articles'.format(articles_remaining))
-        update_article_description(article.id)
-        description_choice = btc.read_int_ranged('{0} descriptions remaining. Press 1 to continue, 2 to cancel: ')
-        if description_choice == 2:
-            print('Update descriptions cancelled')
-            break
+def finalize_desc_month(command):
+    if not command or command == '':
+         new_month = btc.read_int_ranged('Enter new month: ', min_value = 1, max_value = 12)
+         new_year = btc.read_int_ranged('Enter new year: ', min_value = 1, max_value = 2100)
+         articles_to_finalize = db.get_articles_by_month(month=new_month, year=new_year)
+         articles_remaining = len(articles_to_finalize)
+         for article in articles_to_finalize:
+             print('{0} unreviewed articles'.format(articles_remaining))
+             
+             update_article_description(article.id)
+             description_choice = btc.read_int_ranged('{0} descriptions remaining. Press 1 to continue, 2 to cancel: '.format(articles_remaining),
+                                                      1, 2)
+             
+             articles_remaining -= 1
+             if description_choice == 2:
+                 print('Update descriptions cancelled')
+                 break
         
         
-def finalize_title_stripping(month, year):
+def finalize_title_updates(month, year):
     articles = db.get_articles_by_month(month=month, year=year)
     articles_remaining = len(articles)
     for article in articles:
@@ -468,7 +497,7 @@ def finalize_title_stripping(month, year):
         display_single_article(article, title_term = article.id)
         strip_choice = btc.read_int_ranged('1 to strip article, 2 to skip, 3 to return to main menu: ', 1, 3)
         if strip_choice == 1:
-            strip_article_title(article.id)
+            update_article_name(article.id)
             articles_remaining -= 1
         if strip_choice == 2:
             articles_remaining -= 1
@@ -912,7 +941,7 @@ exists, then the prompts will gather the data for the other attributes.
 Invalid categories will cancel article creation. Keyboard interrupts (CTRL+C)
 will return to the main menu.
 ''')
-        
+    
     def do_udname(self, command):
         update_article_name(article_id = command)
     
@@ -973,13 +1002,16 @@ will return to the main menu.
         print('Lets the user remove publication names from the article title')
         print('Publication titles are split using a separator')
         
-    def do_strip_all(self, command):
-        command = split_command(command)
-        finalize_title_stripping(month=command[0], year=command[1])
+    def do_finalize_titles(self, command):
+        try:
+            command = split_command(command)
+            finalize_title_updates(month=command[0], year=command[1])
+        except TypeError:
+            print('finalize_titles entered incorrectly')
     
-    def help_strip_all(self):
-        print('strip_all [month]')
-        print('strips all the articles from that month')
+    def help_finalize_titles(self):
+        print('finalize_titles [month]')
+        print('updates all the articles from that month')
         
     def do_delete_article(self, command):
         delete_article(article_id=command)
@@ -1021,15 +1053,22 @@ will return to the main menu.
         print('finalize 6 2019 : finalizes the June 2019 articles')
         
     def do_review_desc(self, command):
+        finalize_desc_month(command)
         #fix the error with this function
-        command = split_command(command)
-        print(command[0], type(command[0]))
-        print(command[1], type(command[1]))
-        try:
-            finalize_desc_month(month=int(command[0]), year=int(command[1]))
-        except TypeError:
-            print('review_desc command entered incorrectly')
-            print('Enter review_desc [m] [y] to finalize descriptions')
+        #command = split_command(command)
+        #command_0 = int(command[0])
+        #command_1 = int(command[1])
+        #print(command[0], type(command[0]))
+        #print(command[1], type(command[1]))
+#        try:
+#            finalize_desc_month(command)
+#        except TypeError:
+#            print('review_desc command entered incorrectly')
+#            print('Enter review_desc [m] [y] to finalize descriptions')
+        
+    def help_review_desc(self, command):
+        print('review_desc does not take a suffix')
+        print('review the descriptions of each article and make changes')
         
     def do_export(self, command):
         export_interface(command)
