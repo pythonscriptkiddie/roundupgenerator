@@ -985,22 +985,22 @@ will return to the main menu.
         print('udartdate [article_id] updates the date of an article')
         print('The function calls a prompt for the user to enter the date')
         
-    def do_rescrape(self, command):
-        scrape_article_name(article_id=command)
-        
-    def help_rescrape(self):
-        print('rescrape [article_id]')
-        print('e.g. rescrape 18')
-        print('Uses BeautifulSoup to re-scrape the article\'s title')
-        
-    def do_striptitle(self, command):
-        strip_article_title(article_id=command)
-        
-    def help_striptitle(self):
-        print('striptitle [article_id]')
-        print('e.g. striptitle 13')
-        print('Lets the user remove publication names from the article title')
-        print('Publication titles are split using a separator')
+#    def do_rescrape(self, command):
+#        scrape_article_name(article_id=command)
+#        
+#    def help_rescrape(self):
+#        print('rescrape [article_id]')
+#        print('e.g. rescrape 18')
+##        print('Uses BeautifulSoup to re-scrape the article\'s title')
+#        
+#    def do_striptitle(self, command):
+#        strip_article_title(article_id=command)
+#        
+#    def help_striptitle(self):
+#        print('striptitle [article_id]')
+#        print('e.g. striptitle 13')
+#        print('Lets the user remove publication names from the article title')
+#        print('Publication titles are split using a separator')
         
     def do_finalize_titles(self, command):
         try:
