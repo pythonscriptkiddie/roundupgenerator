@@ -304,7 +304,7 @@ def update_article_name(article_id):
                 print('Scrape failed because of {0}'.format(e))
                 updated_title = 'Invalid'
             print('Rescraped title: {0}'.format(updated_title))
-            title_choice = btc.read_int_ranged('1 - existing title, 2 - scraped title, 3 - manual input', 1, 3)
+            title_choice = btc.read_int_ranged('1 - existing title, 2 - scraped title, 3 - manual input: ', 1, 3)
                                 
             if title_choice == 1:
                 print('Title update cancelled, article title unchanged.')
@@ -616,15 +616,15 @@ def csv_item_to_article(csv_list_item):
     new_article_news_item = na.get_article_from_url(csv_list_item[0])
     new_article_link = new_article_news_item.url
     new_article_title = new_article_news_item.title
-    new_article_summary = new_article_news_item.summary
+    #new_article_summary = new_article_news_item.summary
     #inclue this in the unfinished articles
-    new_article_description = "SUMMARY - " + new_article_summary
+    #new_article_description = 'Not specified'
     new_article_category = get_category_id(csv_list_item[1])
-    new_article_day = csv_list_item[2]
-    new_article_month = csv_list_item[3]
+    new_article_month = csv_list_item[2]
+    new_article_day = csv_list_item[3]
     new_article_year = csv_list_item[4]
     article_from_csv = Article(name=new_article_title,link=new_article_link, category=new_article_category, year=new_article_year, month=new_article_month,
-                               day=new_article_day, description=new_article_description, author='Not specified', publication='Not specified')
+                               day=new_article_day, description='Not specified', author='Not specified', publication='Not specified')
     return article_from_csv
     
     
@@ -1039,7 +1039,7 @@ will return to the main menu.
     def help_stats(self):
         print('Enter "stats" without any arguments to bring up the stats options')
     
-    def do_finalize(self, command):
+    def do_complete_desc(self, command):
         command = split_command(command)
         try:
             finalize_article_descriptions(month=command[0], year=command[1])
@@ -1048,7 +1048,7 @@ will return to the main menu.
             print('Enter finalize [m] [y] to finalize descriptions')
             
     
-    def help_finalize(self):
+    def help_complete_desc(self):
         print('finalize [month], [year]')
         print('finalize 6 2019 : finalizes the June 2019 articles')
         
