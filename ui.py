@@ -15,6 +15,7 @@ import glob
 import cmd
 import sys
 import news.news_article as na
+import datetime
 #import warnings
 
 
@@ -120,10 +121,16 @@ def date_search(search_choice):
             month = btc.read_int('Month: ')
             if search_choice in range(1, 2):
                 day = btc.read_int('Day: ')
-                if Article.validate_date(day=day, month=month, year=year) == True:
+                try:
+                    assert datetime.date(day=day, month=month, year = year)
                     display_articles_by_date(year, month, day)
-                else:
-                    print('Invalid date selected')
+                except ValueError:
+                    print('Invalid date. Return to main menu.')
+                    return
+                #if Article.validate_date(day=day, month=month, year=year) == True:
+                    #display_articles_by_date(year, month, day)
+                #else:
+                 #   print('Invalid date selected')
             else:
                 display_articles_by_month(month, year)
         else:

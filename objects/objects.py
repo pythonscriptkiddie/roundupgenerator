@@ -233,6 +233,7 @@ class Article:
             year = read_int_ranged('Article year: ', 1, 2100)
             month = read_int_ranged('Article month: ', 1, 12)
             day = read_int_ranged('Article day: ', 1, 31)
+            #assert Article.validate_date(day=day,month=month,year=year) == True
             author = read_text('Author: ')
             publication = read_text('Publication: ')
             #category = category
