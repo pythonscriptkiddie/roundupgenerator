@@ -648,33 +648,7 @@ def csv_item_to_article(csv_list_item):
 #                      author='Not specified', publication='Not specified')
 #    print(article_from_csv)
 
-def strip_article_title(article_id):
-    #article_id = btc.read_int("article ID: ")
-    article = db.get_article(article_id)
-    if article == None:
-        print('There was no article with that ID. Article NOT found.\n')
-    else:
-        print("1 -",article.regular_title, 'original title')
-        print("2 -",article.stripped_vertical_bar)
-        print("3 -",article.stripped_em_dash)
-        print("4 -",article.stripped_en_dash)
-        print("5 -",article.stripped_hyphen)
-        title_choice = btc.read_int_ranged('Select the best version of the title or "." to cancel: ',
-                                       min_value=1, max_value=5)
-        if title_choice == 1:
-            print('Original title maintained, returning to main menu')
-        elif title_choice == 2:
-            db.update_article_name(article_id, article.stripped_vertical_bar)
-            print('Update complete')
-        elif title_choice == 3:
-            db.update_article_name(article_id, article.stripped_em_dash)
-            print('Update complete')
-        elif title_choice == 4:
-            db.update_article_name(article_id, article.stripped_en_dash)
-            print('Update complete')
-        elif title_choice == 5:
-            db.update_article_name(article_id, article.stripped_hyphen)
-            print('Update complete')
+
             
 
 def delete_article(article_id):
@@ -991,23 +965,6 @@ will return to the main menu.
     def help_udartdate(self):
         print('udartdate [article_id] updates the date of an article')
         print('The function calls a prompt for the user to enter the date')
-        
-#    def do_rescrape(self, command):
-#        scrape_article_name(article_id=command)
-#        
-#    def help_rescrape(self):
-#        print('rescrape [article_id]')
-#        print('e.g. rescrape 18')
-##        print('Uses BeautifulSoup to re-scrape the article\'s title')
-#        
-#    def do_striptitle(self, command):
-#        strip_article_title(article_id=command)
-#        
-#    def help_striptitle(self):
-#        print('striptitle [article_id]')
-#        print('e.g. striptitle 13')
-#        print('Lets the user remove publication names from the article title')
-#        print('Publication titles are split using a separator')
         
     def do_finalize_titles(self, command):
         try:

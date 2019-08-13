@@ -3,6 +3,7 @@ import re
 import requests
 import datetime
 import pandas as pd
+import datetime
 #from .._db import db as db
 #import BTCInput2 as btc
 #import ui
@@ -143,17 +144,6 @@ class Article:
     #article_months is used to load csv files with the month name instead of a number
     
     @staticmethod
-    def validate_date(day, month, year):
-        try:
-            new_date = datetime.datetime(day=day, month=month, year=year)
-            if new_date:
-                return True
-            else:
-                return False
-        except ValueError:
-            return False
-    
-    @staticmethod
     def get_title(url):
         req = requests.get(url)
         soup = BeautifulSoup(req.text, "html5lib")
@@ -179,34 +169,6 @@ class Article:
             new_title = original_title
             return new_title
         
-    @staticmethod
-    def strip_title(article_title):
-        regular_title = article_title
-        stripped_vertical_bar = Article.clean_title(article_title, divider='|')
-        stripped_hyphen = Article.clean_title(article_title, divider = '-')
-        stripped_en_dash = Article.clean_title(article_title, divider = '–')
-        stripped_em_dash = Article.clean_title(article_title, divider = '—')
-        return regular_title, stripped_vertical_bar, stripped_hyphen, stripped_en_dash, stripped_em_dash
-    
-    @property
-    def regular_title(self):
-        return Article.strip_title(self.title)[0]
-    
-    @property
-    def stripped_vertical_bar(self):
-        return Article.strip_title(self.title)[1]
-    
-    @property
-    def stripped_hyphen(self):
-        return Article.strip_title(self.title)[2]
-    
-    @property
-    def stripped_en_dash(self):
-        return Article.strip_title(self.title)[3]
-    
-    @property
-    def stripped_em_dash(self):
-        return Article.strip_title(self.title)[4]
     
     @property
     def date_string(self):
@@ -230,9 +192,10 @@ class Article:
                 return
                 #link=read_text('Article url:' )
             name = read_text('Article title: ')
-            year = read_int_ranged('Article year: ', 1, 2100)
-            month = read_int_ranged('Article month: ', 1, 12)
-            day = read_int_ranged('Article day: ', 1, 31)
+            year = read_int('Article year: ')
+            month = read_int('Article month: ')
+            day = read_int('Article day: ')
+            assert datetime.date(day=day, month=month, year=year)
             #assert Article.validate_date(day=day,month=month,year=year) == True
             author = read_text('Author: ')
             publication = read_text('Publication: ')
@@ -281,10 +244,6 @@ class Article:
     @property
     def month_text(self):
         return Article.article_months[self.month]
-    
-    @property
-    def em_dash_stripped_title(self):
-        return 
     
     @property
     def orderedDictFormat(self):
