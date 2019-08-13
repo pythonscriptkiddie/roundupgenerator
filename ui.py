@@ -502,7 +502,7 @@ def finalize_title_updates(month, year):
     for article in articles:
         print('{0} articles remaining'.format(articles_remaining))
         display_single_article(article, title_term = article.id)
-        strip_choice = btc.read_int_ranged('1 to strip article, 2 to skip, 3 to return to main menu: ', 1, 3)
+        strip_choice = btc.read_int_ranged('1 to update title, 2 to skip, 3 to return to main menu: ', 1, 3)
         if strip_choice == 1:
             update_article_name(article.id)
             articles_remaining -= 1
