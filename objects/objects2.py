@@ -145,6 +145,8 @@ class Article:
     day: int = 0
     category: Any = None
     link: str = None
+    description: str = None
+    publication: str = None
     author: str = None
     
     article_months = {1:'January', 2: 'February', 3: 'March', 4: 'April',
