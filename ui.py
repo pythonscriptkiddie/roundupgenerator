@@ -5,7 +5,7 @@
 '''
 
 import _db.db as db
-from objects.objects import Article, Category
+from objects.objects2 import Article, Category
 import rd.roundup_docx as roundup_docx
 import btc.BTCInput as btc
 import operator
