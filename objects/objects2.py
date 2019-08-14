@@ -169,18 +169,6 @@ class Article:
         soup_text = str(soup.text)
         return soup_text
     
-    @staticmethod
-    def clean_title(title, divider):
-        original_title = title
-        new_title_list = original_title.split(divider)
-        if len(new_title_list) > 1:
-            new_title = new_title_list[0]
-            return new_title
-        else:
-            new_title = original_title
-            return new_title
-        
-    
     @property
     def date_string(self):
         template = '{0}/{1}/{2}'

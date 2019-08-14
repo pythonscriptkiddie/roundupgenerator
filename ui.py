@@ -2,6 +2,7 @@
 
 '''
 5/22/19 - Get article titles using BeautifulSoup
+
 '''
 
 import _db.db as db
@@ -16,6 +17,7 @@ import cmd
 import sys
 import news.news_article as na
 import datetime
+#from dateutil.parser import parse
 #import warnings
 
 
@@ -630,6 +632,7 @@ def csv_item_to_article(csv_list_item):
     new_article_month = csv_list_item[2]
     new_article_day = csv_list_item[3]
     new_article_year = csv_list_item[4]
+
     article_from_csv = Article(name=new_article_title,link=new_article_link, category=new_article_category, year=new_article_year, month=new_article_month,
                                day=new_article_day, description='Not specified', author='Not specified', publication='Not specified')
     return article_from_csv
@@ -1018,17 +1021,6 @@ will return to the main menu.
         
     def do_review_desc(self, command):
         finalize_desc_month(command)
-        #fix the error with this function
-        #command = split_command(command)
-        #command_0 = int(command[0])
-        #command_1 = int(command[1])
-        #print(command[0], type(command[0]))
-        #print(command[1], type(command[1]))
-#        try:
-#            finalize_desc_month(command)
-#        except TypeError:
-#            print('review_desc command entered incorrectly')
-#            print('Enter review_desc [m] [y] to finalize descriptions')
         
     def help_review_desc(self, command):
         print('review_desc does not take a suffix')
