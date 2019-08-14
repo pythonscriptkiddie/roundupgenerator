@@ -253,7 +253,12 @@ class Article:
     def pdFormat(self):
         return  pd.DataFrame.from_dict(self.orderedDictFormat, orient='index')
 
+@dataclass
 class Category:
+    
+    CategoryID: int = id
+    name: str = None
+    articles: Any = None
     
     @classmethod
     def from_input(cls):
@@ -267,13 +272,8 @@ class Category:
             print(e)
             return
         except KeyboardInterrupt:
-            print('Ctrl+C pressed, add article cancelled')
-    
-    def __init__(self, id=0, name=None, articles=[]):
-        self.id = id
-        self.name = name
-        self.articles = articles
+            print('Ctrl+C pressed, add category cancelled')
         
-    def __repr__(self):
-        template = "id: {0} name: {1}"
-        return template.format(self.id, self.name)
+#    def __repr__(self):
+#        template = "id: {0} name: {1}"
+#        return template.format(self.id, self.name)
