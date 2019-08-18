@@ -17,6 +17,7 @@ import cmd
 import sys
 import news.news_article as na
 import datetime
+import tqdm
 #from dateutil.parser import parse
 #import warnings
 
@@ -190,7 +191,8 @@ def add_article_from_newspaper(link):
     try:
         #link = btc.read_text('Link or "." to cancel: ')
         #try:
-        newNewsItem = na.get_article_from_url(link)
+        for i in tqdm.tqdm(range(1)):
+            newNewsItem = na.get_article_from_url(link)
         print(newNewsItem)
         #except Exception as e:
             #print(e)
